@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const QuizCard = ({ quiz, index }) => {
   const imageUrl = quiz.image
-    ? `http://localhost:5000${quiz.image}`
+    ? `https://exammate-backend-wil3.onrender.com${quiz.image}`
     : "https://via.placeholder.com/400x200?text=Quiz+Image";
 
   return (

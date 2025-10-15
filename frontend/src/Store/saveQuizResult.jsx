@@ -10,7 +10,7 @@ export const saveQuizResult = async (resultData) => {
     }
 
     const res = await fetch(
-      `http://localhost:5000/api/quiz/submit/${resultData.quizId}`, // ✅ backticks
+      `https://exammate-backend-wil3.onrender.com/api/quiz/submit/${resultData.quizId}`, // ✅ backticks
       {
         method: "POST",
         headers: {
@@ -40,7 +40,7 @@ export const getQuizResults = async () => {
     const token = localStorage.getItem("token");
     if (!token || token === "undefined") throw new Error("User not authenticated");
 
-    const res = await fetch("http://localhost:5000/api/quiz/result", {
+    const res = await fetch("https://exammate-backend-wil3.onrender.com/api/quiz/result", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

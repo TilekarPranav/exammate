@@ -8,7 +8,7 @@ const QuizzesPage = () => {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/quiz/display");
+        const res = await fetch("https://exammate-backend-wil3.onrender.com/api/quiz/display");
         if (!res.ok) throw new Error("Failed to fetch quizzes");
         const data = await res.json();
         setQuizzes(data);
