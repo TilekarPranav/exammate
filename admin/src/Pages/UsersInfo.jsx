@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const UsersInfo = () => {
+
+  const URL = import.meta.env.VITE_CLIENT_URL || "http://localhost:5000";
+
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -10,7 +13,7 @@ const UsersInfo = () => {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("https://exammate-backend-88ln.onrender.com/api/users", {
+      const res = await axios.get(`${URL}/api/users`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(res.data.users);
@@ -24,14 +27,12 @@ const UsersInfo = () => {
     fetchUsers();
   }, []);
 
-  // Search filter
   const filteredUsers = users.filter(
     (user) =>
       user.name.toLowerCase().includes(search.toLowerCase()) ||
       user.email.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Pagination
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
@@ -84,7 +85,6 @@ const UsersInfo = () => {
         ))}
       </div>
 
-      {/* Pagination Controls */}
       <div className="flex justify-center items-center mt-6 space-x-3">
         <button
           disabled={currentPage === 1}

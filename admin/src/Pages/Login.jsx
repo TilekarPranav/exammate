@@ -19,6 +19,9 @@ const Input = ({ icon: Icon, type, placeholder, value, onChange }) => (
 );
 
 const Login = () => {
+
+  const URL = import.meta.env.VITE_CLIENT_URL || "http://localhost:5000";
+
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,7 +34,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("https://exammate-backend-88ln.onrender.com/api/admin/login", {
+      const res = await fetch(`${URL}/api/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -51,7 +54,7 @@ const Login = () => {
         localStorage.setItem("token", data.token);
       }
 
-      navigate("/home"); // ✅ go to Home after login
+      navigate("/home"); 
     } catch (err) {
       console.error("Login error:", err);
       setError("Something went wrong. Please try again.");

@@ -35,7 +35,6 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Login />} />
 
-          {/* Protected Routes */}
           <Route
             path="/home"
             element={

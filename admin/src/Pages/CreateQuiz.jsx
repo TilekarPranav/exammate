@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const CreateQuiz = () => {
+  const URL = import.meta.env.VITE_CLIENT_URL || "http://localhost:5000";
   const [quizData, setQuizData] = useState({
     subject: "",
     title: "",
@@ -91,7 +92,7 @@ const CreateQuiz = () => {
       if (imageFile) formData.append("image", imageFile);
 
       const res = await axios.post(
-        "https://exammate-backend-88ln.onrender.com/api/quiz/create",
+        `${URL}/api/quiz/create`,
         formData,
         {
           headers: {

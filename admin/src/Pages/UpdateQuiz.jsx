@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const UpdateQuiz = () => {
+
+  const URL = import.meta.env.VITE_CLIENT_URL || "http://localhost:5000";
+
   const [quizId, setQuizId] = useState("");
   const [quizData, setQuizData] = useState({
     subject: "",
@@ -16,12 +19,11 @@ const UpdateQuiz = () => {
   const [imageFile, setImageFile] = useState(null);
   const [existingImage, setExistingImage] = useState(null);
 
-  // Fetch quiz by ID
   const fetchQuiz = async () => {
     if (!quizId) return;
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`https://exammate-backend-88ln.onrender.com/api/quiz/${quizId}`, {
+      const res = await axios.get(`${URL}/api/quiz/${quizId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = res.data;
@@ -43,7 +45,7 @@ const UpdateQuiz = () => {
           ],
       });
 
-      setExistingImage(data.image || null); // Assuming your backend returns `image` URL
+      setExistingImage(data.image || null); 
       setImageFile(null);
     } catch (err) {
       console.error(err);
@@ -121,7 +123,7 @@ const UpdateQuiz = () => {
       if (imageFile) formData.append("image", imageFile);
 
       const res = await axios.put(
-        `https://exammate-backend-88ln.onrender.com/api/quiz/update/${quizId}`,
+        `${URL}/api/quiz/update/${quizId}`,
         formData,
         {
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },

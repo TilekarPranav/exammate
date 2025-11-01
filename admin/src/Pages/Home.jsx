@@ -5,6 +5,9 @@ import axios from "axios";
 import { Edit, Trash2, Copy } from "lucide-react";
 
 export default function Home() {
+
+  const URL = import.meta.env.VITE_CLIENT_URL || "http://localhost:5000";
+
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -13,7 +16,7 @@ export default function Home() {
   const fetchQuizzes = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("https://exammate-backend-88ln.onrender.com/api/quiz/all", {
+      const res = await axios.get(`${URL}/api/quiz/all`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setQuizzes(res.data.quizzes);
@@ -37,7 +40,6 @@ export default function Home() {
   if (loading) return <div className="p-5 text-white">Loading quizzes...</div>;
   if (error) return <div className="p-5 text-red-500">Error: {error}</div>;
 
-  // Action cards when no quizzes exist
   if (quizzes.length === 0) {
     const actions = [
       { title: "Create Quiz", page: "/create-quiz", color: "bg-green-500" },
@@ -74,7 +76,6 @@ export default function Home() {
     );
   }
 
-  // Quizzes exist
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-green-900 to-emerald-900 py-12 px-4">
       <motion.h1
@@ -89,7 +90,7 @@ export default function Home() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {quizzes.map((quiz, idx) => {
           const imageUrl = quiz.image
-            ? `https://exammate-backend-88ln.onrender.com${quiz.image}`
+            ? `${URL}${quiz.image}`
             : "https://via.placeholder.com/400x200?text=Quiz+Image";
 
           return (
@@ -100,7 +101,6 @@ export default function Home() {
               transition={{ delay: idx * 0.05, duration: 0.4 }}
               className="bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col cursor-pointer hover:scale-105 hover:shadow-xl transition transform duration-300 max-w-[400px] mx-auto"
             >
-              {/* Quiz Image */}
               <div className="h-32 w-full">
                 <img
                   src={imageUrl}
@@ -110,23 +110,19 @@ export default function Home() {
               </div>
 
               <div className="p-3 flex flex-col flex-1">
-                {/* Title Center */}
                 <h2 className="text-md font-bold text-white text-center mb-1 truncate">
                   {quiz.title}
                 </h2>
 
-                {/* Subject left, Level & Time right */}
                 <div className="flex justify-between items-center text-xs mb-1">
                   <span className="text-gray-300 truncate">{quiz.subject}</span>
                   <span className="text-gray-400">{quiz.level} | {quiz.timeLimit}s</span>
                 </div>
 
-                {/* Quiz ID center */}
                 <p className="text-gray-300 text-xs text-center break-all truncate mb-2">
                   <span className="font-semibold">ID:</span> {quiz._id}
                 </p>
 
-                {/* Buttons */}
                 <div className="flex justify-between mt-auto gap-1">
                   <button
                     onClick={(e) => {

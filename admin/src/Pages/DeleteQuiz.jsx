@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const DeleteQuiz = () => {
+  const URL = import.meta.env.VITE_CLIENT_URL || "http://localhost:5000";
+
   const [quizId, setQuizId] = useState("");
 
   const handleDelete = async () => {
@@ -23,7 +25,7 @@ const DeleteQuiz = () => {
       }
 
       const res = await axios.delete(
-        `https://exammate-backend-88ln.onrender.com/api/quiz/delete/${quizId}`,
+        `${URL}/api/quiz/delete/${quizId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
