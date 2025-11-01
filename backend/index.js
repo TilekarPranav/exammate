@@ -18,9 +18,14 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use((req, res, next) => {
+  console.log(`[${req.method}] ${req.url} | Origin: ${req.headers.origin}`);
+  next();
+});
+
 const allowedOrigins = [
-  process.env.CLIENT_URL, 
-  "http://localhost:5173"
+  process.env.CLIENT_URL,
+  "http://localhost:5173",
 ];
 
 app.use(
@@ -44,15 +49,15 @@ app.use("/api/quiz", quizRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/users", usersRouter);
 
-
 const PORT = process.env.PORT || 5000;
 
 connectDB()
   .then(() => {
-    app.listen(PORT, () =>
-      console.log(`✅ Server running at http://localhost:${PORT}`)
-    );
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+      console.log(`Allowed Origins: ${allowedOrigins.join(", ")}`);
+    });
   })
   .catch((err) => {
-    console.error("❌ Failed to connect to MongoDB:", err);
+    console.error("Failed to connect to MongoDB:", err);
   });
