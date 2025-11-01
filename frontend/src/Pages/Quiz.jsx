@@ -4,7 +4,7 @@ import { saveQuizResult } from "../Store/saveQuizResult";
 
 const Quiz = () => {
 
-  const URL = import.meta.env.CLIENT_URL || "http://localhost:5000";
+  const URL = import.meta.env.FRONTEND_URL || "http://localhost:5000";
 
   const { id } = useParams();
   const navigate = useNavigate();

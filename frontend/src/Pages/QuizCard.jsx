@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const QuizCard = ({ quiz, index }) => {
 
-  const URL = import.meta.env.CLIENT_URL || "http://localhost:5000";
+  const URL = import.meta.env.FRONTEND_URL || "http://localhost:5000";
   
   const imageUrl = quiz.image
     ? `${URL}${quiz.image}`

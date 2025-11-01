@@ -3,7 +3,7 @@ import QuizCard from "./QuizCard";
 
 const QuizzesPage = () => {
 
-  const URL = import.meta.env.CLIENT_URL || "http://localhost:5000";
+  const URL = import.meta.env.FRONTEND_URL || "http://localhost:5000";
 
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
