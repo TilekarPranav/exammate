@@ -23,7 +23,7 @@ const DeleteQuiz = () => {
       }
 
       const res = await axios.delete(
-        `http://localhost:5000/api/quiz/delete/${quizId}`,
+        `https://exammate-backend-88ln.onrender.com/api/quiz/delete/${quizId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

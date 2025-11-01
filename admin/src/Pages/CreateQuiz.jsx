@@ -91,7 +91,7 @@ const CreateQuiz = () => {
       if (imageFile) formData.append("image", imageFile);
 
       const res = await axios.post(
-        "http://localhost:5000/api/quiz/create",
+        "https://exammate-backend-88ln.onrender.com/api/quiz/create",
         formData,
         {
           headers: {

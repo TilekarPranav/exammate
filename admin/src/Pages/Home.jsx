@@ -13,7 +13,7 @@ export default function Home() {
   const fetchQuizzes = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/quiz/all", {
+      const res = await axios.get("https://exammate-backend-88ln.onrender.com/api/quiz/all", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setQuizzes(res.data.quizzes);
@@ -89,7 +89,7 @@ export default function Home() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {quizzes.map((quiz, idx) => {
           const imageUrl = quiz.image
-            ? `http://localhost:5000${quiz.image}`
+            ? `https://exammate-backend-88ln.onrender.com${quiz.image}`
             : "https://via.placeholder.com/400x200?text=Quiz+Image";
 
           return (

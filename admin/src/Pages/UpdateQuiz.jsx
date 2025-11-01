@@ -21,7 +21,7 @@ const UpdateQuiz = () => {
     if (!quizId) return;
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`http://localhost:5000/api/quiz/${quizId}`, {
+      const res = await axios.get(`https://exammate-backend-88ln.onrender.com/api/quiz/${quizId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = res.data;
@@ -121,7 +121,7 @@ const UpdateQuiz = () => {
       if (imageFile) formData.append("image", imageFile);
 
       const res = await axios.put(
-        `http://localhost:5000/api/quiz/update/${quizId}`,
+        `https://exammate-backend-88ln.onrender.com/api/quiz/update/${quizId}`,
         formData,
         {
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
