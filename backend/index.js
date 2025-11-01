@@ -19,13 +19,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
-  console.log(`[${req.method}] ${req.url} | Origin: ${req.headers.origin}`);
+  console.log(`➡️ [${req.method}] ${req.url} | Origin: ${req.headers.origin}`);
   next();
 });
 
 const allowedOrigins = [
-  process.env.CLIENT_URL,
-  "http://localhost:5173",
+  process.env.CLIENT_URL, 
+  "http://localhost:5173", 
 ];
 
 app.use(
@@ -34,7 +34,7 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        console.error(`Blocked by CORS: ${origin}`);
+        console.error(`❌ Blocked by CORS: ${origin}`);
         callback(new Error("Not allowed by CORS"));
       }
     },
