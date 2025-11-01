@@ -1,5 +1,4 @@
-// frontend/src/api/saveQuizResult.jsx
-
+const URL = import.meta.env.CLIENT_URL || "http://localhost:5000";
 export const saveQuizResult = async (resultData) => {
   try {
     if (!resultData.quizId) throw new Error("quizId is required");
@@ -10,7 +9,7 @@ export const saveQuizResult = async (resultData) => {
     }
 
     const res = await fetch(
-      `http://localhost:5000/api/quiz/submit/${resultData.quizId}`, // ✅ backticks
+      `${URL}/api/quiz/submit/${resultData.quizId}`,
       {
         method: "POST",
         headers: {
@@ -28,7 +27,7 @@ export const saveQuizResult = async (resultData) => {
 
     if (!res.ok) throw new Error(data.message || "Failed to save quiz result");
 
-    return data; // { success: true, message: ..., result: ... }
+    return data; 
   } catch (error) {
     console.error("Error in saveQuizResult:", error);
     throw error;
@@ -40,7 +39,7 @@ export const getQuizResults = async () => {
     const token = localStorage.getItem("token");
     if (!token || token === "undefined") throw new Error("User not authenticated");
 
-    const res = await fetch("http://localhost:5000/api/quiz/result", {
+    const res = await fetch(`${URL}/api/quiz/result`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -51,7 +50,6 @@ export const getQuizResults = async () => {
 
     if (!res.ok) throw new Error(data.message || "Failed to fetch results");
 
-    // backend returns array
     const results = Array.isArray(data) ? data : data.results || [];
 
     return results.map((r) => ({

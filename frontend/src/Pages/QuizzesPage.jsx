@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import QuizCard from "./QuizCard";
 
 const QuizzesPage = () => {
+
+  const URL = import.meta.env.CLIENT_URL || "http://localhost:5000";
+
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/quiz/display");
+        const res = await fetch(`${URL}/api/quiz/display`);
         if (!res.ok) throw new Error("Failed to fetch quizzes");
         const data = await res.json();
         setQuizzes(data);

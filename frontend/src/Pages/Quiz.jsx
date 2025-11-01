@@ -3,6 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { saveQuizResult } from "../Store/saveQuizResult";
 
 const Quiz = () => {
+
+  const URL = import.meta.env.CLIENT_URL || "http://localhost:5000";
+
   const { id } = useParams();
   const navigate = useNavigate();
   const [quiz, setQuiz] = useState(null);
@@ -25,7 +28,7 @@ const Quiz = () => {
           return;
         }
 
-        const res = await fetch(`http://localhost:5000/api/quiz/display/${id}`, {
+        const res = await fetch(`${URL}/api/quiz/display/${id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -44,7 +47,7 @@ const Quiz = () => {
 
         const data = await res.json();
         setQuiz(data);
-        setTimeLeft(data.questions[0]?.questionTime || 30); // ✅ use per-question time
+        setTimeLeft(data.questions[0]?.questionTime || 30); 
       } catch (err) {
         console.error("Error fetching quiz:", err);
         navigate("/quizzes");
@@ -54,11 +57,10 @@ const Quiz = () => {
     fetchQuiz();
   }, [id, navigate]);
 
-  // Timer
   useEffect(() => {
     if (!quiz) return;
     if (timeLeft <= 0) {
-      handleNext(); // auto move when time ends
+      handleNext(); 
       return;
     }
 
@@ -78,7 +80,7 @@ const Quiz = () => {
   const handleNext = () => {
     if (currentIndex < quiz.questions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
-      setTimeLeft(quiz.questions[currentIndex + 1].questionTime || 30); // ✅ reset per-question time
+      setTimeLeft(quiz.questions[currentIndex + 1].questionTime || 30);
     } else {
       handleSubmit();
     }
@@ -88,7 +90,7 @@ const Quiz = () => {
     if (selectedOptions[currentIndex] != null) return;
     if (currentIndex > 0) {
       setCurrentIndex((prev) => prev - 1);
-      setTimeLeft(quiz.questions[currentIndex - 1].questionTime || 30); // ✅ reset when going back
+      setTimeLeft(quiz.questions[currentIndex - 1].questionTime || 30);
     }
   };
 

@@ -3,8 +3,11 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const QuizCard = ({ quiz, index }) => {
+
+  const URL = import.meta.env.CLIENT_URL || "http://localhost:5000";
+  
   const imageUrl = quiz.image
-    ? `http://localhost:5000${quiz.image}`
+    ? `${URL}${quiz.image}`
     : "https://via.placeholder.com/400x200?text=Quiz+Image";
 
   return (

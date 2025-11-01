@@ -1,4 +1,3 @@
-// frontend/src/pages/DashboardPage.jsx
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { getQuizResults } from "../Store/saveQuizResult";
@@ -42,7 +41,6 @@ export default function DashboardPage() {
 
       {error && <div className="mb-4 text-red-400 text-center">{error}</div>}
 
-      {/* Stats */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -74,7 +72,6 @@ export default function DashboardPage() {
         </div>
       </motion.div>
 
-      {/* Results Table */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
