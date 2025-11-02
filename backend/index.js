@@ -18,12 +18,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const allowedOrigins = [
-  "https://exammates-admin.onrender.com",
-  "https://exammate-hupf.onrender.com",
-  "http://localhost:5173",
-  "http://localhost:3000",
   process.env.FRONTEND_URL,
   process.env.CLIENT_URL,
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://exammates.netlify.app",
 ];
 
 app.use(
@@ -33,7 +32,7 @@ app.use(
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        console.warn(`Blocked by CORS: ${origin}`);
+        console.warn(`❌ CORS blocked: ${origin}`);
         callback(new Error("Not allowed by CORS"));
       }
     },
@@ -43,17 +42,7 @@ app.use(
   })
 );
 
-// ✅ Fixed line below
-app.options("*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.header("Access-Control-Allow-Credentials", "true");
-  return res.sendStatus(200);
-});
+app.options("*", cors());
 
 app.use((req, res, next) => {
   console.log(`[${req.method}] ${req.url} | Origin: ${req.headers.origin}`);
