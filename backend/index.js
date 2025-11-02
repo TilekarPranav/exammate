@@ -11,17 +11,11 @@ import usersRouter from "./routes/auth.route.js";
 import { connectDB } from "./db/connectDB.js";
 
 dotenv.config();
-
 const app = express();
 
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.use((req, res, next) => {
-  console.log(`➡️ [${req.method}] ${req.url} | Origin: ${req.headers.origin}`);
-  next();
-});
 
 const allowedOrigins = [
   process.env.FRONTEND_URL,
@@ -36,12 +30,18 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.warn(`Blocked by CORS: ${origin}`);
         callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
   })
 );
+
+app.use((req, res, next) => {
+  console.log(`[${req.method}] ${req.url} | Origin: ${req.headers.origin}`);
+  next();
+});
 
 app.use("/uploads", express.static("uploads"));
 
