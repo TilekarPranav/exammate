@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const DeleteQuiz = () => {
-  const URL = "https://exammates-backend.onrender.com";
 
+  const URL = import.meta.env.ADMIN_URL || "http://localhost:5000";
+  
   const [quizId, setQuizId] = useState("");
 
   const handleDelete = async () => {

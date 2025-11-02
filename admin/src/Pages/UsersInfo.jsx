@@ -3,7 +3,7 @@ import axios from "axios";
 
 const UsersInfo = () => {
 
-  const URL = "https://exammates-backend.onrender.com";
+  const URL = import.meta.env.ADMIN_URL || "http://localhost:5000";
 
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
