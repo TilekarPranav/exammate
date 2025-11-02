@@ -7,7 +7,6 @@ import { Edit, Trash2, Copy } from "lucide-react";
 export default function Home() {
 
   const URL = import.meta.env.ADMIN_URL || "http://localhost:5000";
-  axios.defaults.baseURL = URL;
 
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +16,7 @@ export default function Home() {
   const fetchQuizzes = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`/api/quiz/all`, {
+      const res = await axios.get(`${URL}/api/quiz/all`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setQuizzes(res.data.quizzes);

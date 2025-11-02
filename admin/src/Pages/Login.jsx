@@ -2,7 +2,6 @@ import { Mail, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 const Input = ({ icon: Icon, type, placeholder, value, onChange }) => (
   <div className="relative mb-4">
@@ -22,7 +21,6 @@ const Input = ({ icon: Icon, type, placeholder, value, onChange }) => (
 const Login = () => {
 
   const URL = import.meta.env.ADMIN_URL || "http://localhost:5000";
-  axios.defaults.baseURL = URL;
 
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -36,12 +34,14 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post(`/api/admin/login`, {
-        email,
-        password
+      const res = await fetch(`${URL}/api/admin/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+        credentials: "include",
       });
 
-      const data = res.data;
+      const data = await res.json();
       console.log("Login response:", data);
 
       if (!res.ok) {

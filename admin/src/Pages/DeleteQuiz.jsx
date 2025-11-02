@@ -4,7 +4,6 @@ import axios from "axios";
 const DeleteQuiz = () => {
 
   const URL = import.meta.env.ADMIN_URL || "http://localhost:5000";
-  axios.defaults.baseURL = URL;
 
   const [quizId, setQuizId] = useState("");
 
@@ -27,7 +26,7 @@ const DeleteQuiz = () => {
       }
 
       const res = await axios.delete(
-        `/api/quiz/delete/${quizId}`,
+        `${URL}/api/quiz/delete/${quizId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

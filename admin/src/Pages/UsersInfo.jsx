@@ -4,7 +4,6 @@ import axios from "axios";
 const UsersInfo = () => {
 
   const URL = import.meta.env.ADMIN_URL || "http://localhost:5000";
-  axios.defaults.baseURL = URL;
 
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
@@ -14,7 +13,7 @@ const UsersInfo = () => {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`/api/users`, {
+      const res = await axios.get(`${URL}/api/users`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(res.data.users);
