@@ -3,7 +3,7 @@ import axios from "axios";
 
 const UsersInfo = () => {
 
-  const URL = import.meta.env.VITE_CLIENT_URL || "http://localhost:5000";
+  const URL = "https://exammates-backend.onrender.com";
 
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");

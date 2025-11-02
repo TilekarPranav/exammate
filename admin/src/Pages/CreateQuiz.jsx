@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const CreateQuiz = () => {
-  const URL = import.meta.env.VITE_CLIENT_URL || "http://localhost:5000";
+  
+  const URL = "https://exammates-backend.onrender.com";
+
   const [quizData, setQuizData] = useState({
     subject: "",
     title: "",

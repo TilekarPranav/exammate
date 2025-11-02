@@ -3,7 +3,7 @@ import axios from "axios";
 
 const UpdateQuiz = () => {
 
-  const URL = import.meta.env.VITE_CLIENT_URL || "http://localhost:5000";
+  const URL = "https://exammates-backend.onrender.com";
 
   const [quizId, setQuizId] = useState("");
   const [quizData, setQuizData] = useState({

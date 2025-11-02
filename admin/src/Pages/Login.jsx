@@ -20,7 +20,7 @@ const Input = ({ icon: Icon, type, placeholder, value, onChange }) => (
 
 const Login = () => {
 
-  const URL = import.meta.env.VITE_CLIENT_URL || "http://localhost:5000";
+  const URL = "https://exammates-backend.onrender.com";
 
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
