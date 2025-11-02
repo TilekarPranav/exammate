@@ -18,10 +18,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const allowedOrigins = [
-  "https://exammates-admin.onrender.com", 
-  "https://exammate-hupf.onrender.com",        
-  "http://localhost:5173",               
-  "http://localhost:3000",               
+  "https://exammates-admin.onrender.com",
+  "https://exammate-hupf.onrender.com",
+  "http://localhost:5173",
+  "http://localhost:3000",
   process.env.FRONTEND_URL,
   process.env.CLIENT_URL,
 ];
@@ -43,8 +43,8 @@ app.use(
   })
 );
 
-app.options("*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
+app.options("/*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header(
     "Access-Control-Allow-Headers",
