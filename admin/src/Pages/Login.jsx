@@ -2,7 +2,6 @@ import { Mail, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 const Input = ({ icon: Icon, type, placeholder, value, onChange }) => (
   <div className="relative mb-4">
@@ -35,7 +34,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${URL}/api/admin/login`, {
+      const res = await fetch(`https://exammates-backend.onrender.com/api/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
