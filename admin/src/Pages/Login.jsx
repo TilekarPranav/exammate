@@ -20,7 +20,7 @@ const Input = ({ icon: Icon, type, placeholder, value, onChange }) => (
 
 const Login = () => {
 
-  const URL = process.env.ADMIN_URL || "http://localhost:5000";
+  const URL = import.meta.env.ADMIN_URL || "http://localhost:5000";
 
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
