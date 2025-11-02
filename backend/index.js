@@ -32,7 +32,7 @@ app.use(
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        console.warn(`❌ CORS blocked: ${origin}`);
+        console.warn(`Blocked by CORS: ${origin}`);
         callback(new Error("Not allowed by CORS"));
       }
     },
@@ -42,7 +42,16 @@ app.use(
   })
 );
 
-app.options("*", cors());
+app.options("/*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.sendStatus(200);
+});
 
 app.use((req, res, next) => {
   console.log(`[${req.method}] ${req.url} | Origin: ${req.headers.origin}`);
@@ -50,7 +59,6 @@ app.use((req, res, next) => {
 });
 
 app.use("/uploads", express.static("uploads"));
-
 app.use("/api/auth", authRouter);
 app.use("/api/quiz", quizRouter);
 app.use("/api/admin", adminRouter);
