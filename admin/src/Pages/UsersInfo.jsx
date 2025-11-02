@@ -3,7 +3,7 @@ import axios from "axios";
 
 const UsersInfo = () => {
 
-  const URL = import.meta.env.ADMIN_URL || "http://localhost:5000";
+  const URL = process.env.ADMIN_URL || "http://localhost:5000";
 
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
