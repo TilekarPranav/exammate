@@ -18,16 +18,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const allowedOrigins = [
+  "https://exammates-admin.onrender.com", 
+  "https://exammate-hupf.onrender.com",        
+  "http://localhost:5173",               
+  "http://localhost:3000",               
   process.env.FRONTEND_URL,
   process.env.CLIENT_URL,
-  "http://localhost:5173",
-  "http://localhost:3000",
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         console.warn(`Blocked by CORS: ${origin}`);
@@ -35,8 +38,21 @@ app.use(
       }
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+  return res.sendStatus(200);
+});
 
 app.use((req, res, next) => {
   console.log(`[${req.method}] ${req.url} | Origin: ${req.headers.origin}`);
