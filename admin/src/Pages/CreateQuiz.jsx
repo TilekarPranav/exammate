@@ -4,6 +4,7 @@ import axios from "axios";
 const CreateQuiz = () => {
   
   const URL = import.meta.env.ADMIN_URL || "http://localhost:5000";
+  axios.defaults.baseURL = URL;
 
   const [quizData, setQuizData] = useState({
     subject: "",
@@ -94,7 +95,7 @@ const CreateQuiz = () => {
       if (imageFile) formData.append("image", imageFile);
 
       const res = await axios.post(
-        `${URL}/api/quiz/create`,
+        `/api/quiz/create`,
         formData,
         {
           headers: {

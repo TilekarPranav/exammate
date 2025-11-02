@@ -4,6 +4,7 @@ import axios from "axios";
 const UpdateQuiz = () => {
 
   const URL = import.meta.env.ADMIN_URL || "http://localhost:5000";
+  axios.defaults.baseURL = URL;
 
   const [quizId, setQuizId] = useState("");
   const [quizData, setQuizData] = useState({
@@ -23,7 +24,7 @@ const UpdateQuiz = () => {
     if (!quizId) return;
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`${URL}/api/quiz/${quizId}`, {
+      const res = await axios.get(`/api/quiz/${quizId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = res.data;
