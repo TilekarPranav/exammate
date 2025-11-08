@@ -3,7 +3,7 @@ import axios from "axios";
 
 const CreateQuiz = () => {
 
-  const URL = import.meta.env.ADMIN_URL || "http://localhost:5000";
+  const URL = import.meta.env.VITE_ADMIN_URL || "http://localhost:5000";
 
   const [quizData, setQuizData] = useState({
     subject: "",
