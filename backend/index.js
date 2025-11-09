@@ -21,7 +21,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
   "https://exammate-hupf.onrender.com",
-  "https://exammates-admin.onrender.com",
+  "https://exammate-admins.onrender.com",
 ];
 
 app.use(
