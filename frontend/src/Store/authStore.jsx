@@ -6,7 +6,8 @@ const URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 const API_URL =
   import.meta.env.MODE === "development"
     ? `${URL}/api/auth`
-    : "/api/auth";
+    : "https://exammate-backends.onrender.com/api/auth";
+
 
 axios.defaults.withCredentials = true;
 
