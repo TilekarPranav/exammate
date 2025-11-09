@@ -1,4 +1,4 @@
-const URL = import.meta.env.FRONTEND_URL || "http://localhost:5000";
+const URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 export const saveQuizResult = async (resultData) => {
   try {
     if (!resultData.quizId) throw new Error("quizId is required");
