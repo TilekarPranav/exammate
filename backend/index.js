@@ -58,7 +58,6 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/auth", authRouter);
 app.use("/api/quiz", quizRouter);
 app.use("/api/admin", adminRouter);
-app.use("/api/users", usersRouter);
 
 const PORT = process.env.PORT || 5000;
 
