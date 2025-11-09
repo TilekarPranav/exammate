@@ -13,12 +13,14 @@ import {
 export const signup = async (req, res) => {
   const { email, password, name } = req.body;
   try {
-    if (!email || !password || !name)
+    if (!email || !password || !name) {
       return res.status(400).json({ success: false, message: "All fields are required" });
+    }
 
     const existing = await User.findOne({ email });
-    if (existing)
+    if (existing) {
       return res.status(400).json({ success: false, message: "User already exists" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
@@ -41,22 +43,24 @@ export const signup = async (req, res) => {
       user: { ...user.toObject(), password: undefined },
     });
   } catch (error) {
+    console.error("Signup Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
 export const verifyEmail = async (req, res) => {
   const { code } = req.body;
-  if (!code)
+  if (!code) {
     return res.status(400).json({ success: false, message: "Verification code is required" });
-
+  }
   try {
     const user = await User.findOne({
       verificationToken: code,
       verificationTokenExpiresAt: { $gt: Date.now() },
     });
-    if (!user)
+    if (!user) {
       return res.status(400).json({ success: false, message: "Invalid or expired verification code" });
+    }
 
     user.isVerified = true;
     user.verificationToken = undefined;
@@ -71,6 +75,7 @@ export const verifyEmail = async (req, res) => {
       user: { ...user.toObject(), password: undefined },
     });
   } catch (error) {
+    console.error("Email Verification Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -79,12 +84,10 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    if (!user)
-      return res.status(400).json({ success: false, message: "Invalid credentials" });
+    if (!user) return res.status(400).json({ success: false, message: "Invalid credentials" });
 
     const valid = await bcrypt.compare(password, user.password);
-    if (!valid)
-      return res.status(400).json({ success: false, message: "Invalid credentials" });
+    if (!valid) return res.status(400).json({ success: false, message: "Invalid credentials" });
 
     const token = generateTokenAndSetCookie(res, user._id);
     user.lastLogin = new Date();
@@ -97,6 +100,7 @@ export const login = async (req, res) => {
       user: { ...user.toObject(), password: undefined },
     });
   } catch (error) {
+    console.error("Login Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -110,17 +114,19 @@ export const forgotPassword = async (req, res) => {
   const { email } = req.body;
   try {
     const user = await User.findOne({ email });
-    if (!user)
+    if (!user) {
       return res.status(400).json({ success: false, message: "User not found" });
+    }
 
     const resetToken = crypto.randomBytes(20).toString("hex");
     user.resetPasswordToken = resetToken;
-    user.resetPasswordExpires = Date.now() + 60 * 60 * 1000;
+    user.resetPasswordExpires = Date.now() + 60 * 60 * 1000; // 1 hour
     await user.save();
 
     await sendPasswordResetEmail(user.email, `${process.env.CLIENT_URL}/reset-password/${resetToken}`);
     res.status(200).json({ success: true, message: "Password reset email sent" });
   } catch (error) {
+    console.error("Forgot Password Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -135,8 +141,9 @@ export const resetPassword = async (req, res) => {
       resetPasswordExpires: { $gt: Date.now() },
     });
 
-    if (!user)
+    if (!user) {
       return res.status(400).json({ success: false, message: "Invalid or expired password reset token" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     user.password = hashedPassword;
@@ -147,21 +154,24 @@ export const resetPassword = async (req, res) => {
     await sendResetSuccessEmail(user.email);
     res.status(200).json({ success: true, message: "Password reset successfully" });
   } catch (error) {
+    console.error("Reset Password Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
 export const checkAuth = async (req, res) => {
   try {
-    if (!req.userId)
+    if (!req.userId) {
       return res.status(401).json({ success: false, message: "Not authenticated" });
-
+    }
     const user = await User.findById(req.userId).select("-password");
-    if (!user)
+    if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
+    }
 
     res.status(200).json({ success: true, user });
   } catch (error) {
+    console.error("CheckAuth Error:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
@@ -169,6 +179,7 @@ export const checkAuth = async (req, res) => {
 export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find().lean();
+
     const usersWithAttempts = await Promise.all(
       users.map(async (user) => {
         const attempts = await QuizAttempt.find({ userId: user._id }).lean();
@@ -177,11 +188,14 @@ export const getAllUsers = async (req, res) => {
           score: a.score,
           attempts: a.attempts,
         }));
+
         return { ...user, attemptedQuizzes };
       })
     );
+
     res.json({ users: usersWithAttempts });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Failed to fetch users" });
   }
 };
