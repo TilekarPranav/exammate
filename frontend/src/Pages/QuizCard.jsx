@@ -5,9 +5,12 @@ import { motion } from "framer-motion";
 const QuizCard = ({ quiz, index }) => {
 
   const URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-  
+
+
   const imageUrl = quiz.image
-    ? `${URL}${quiz.image}`
+    ? quiz.image.startsWith("http")
+      ? quiz.image
+      : `${URL}${quiz.image}`
     : "https://via.placeholder.com/400x200?text=Quiz+Image";
 
   return (

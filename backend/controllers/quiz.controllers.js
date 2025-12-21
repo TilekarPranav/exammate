@@ -10,7 +10,8 @@ export const Create = async (req, res) => {
       return res.status(400).json({ error: "Questions are required" });
     }
 
-    const parsedQuestions = typeof questions === "string" ? JSON.parse(questions) : questions;
+    const parsedQuestions =
+      typeof questions === "string" ? JSON.parse(questions) : questions;
 
     const quiz = new Quiz({
       subject,
@@ -19,7 +20,7 @@ export const Create = async (req, res) => {
       level,
       totalQuestions: parsedQuestions.length,
       questions: parsedQuestions,
-      image: req.file ? `/uploads/${req.file.filename}` : undefined,
+      image: req.file ? req.file.path : undefined,
     });
 
     await quiz.save();
@@ -30,23 +31,27 @@ export const Create = async (req, res) => {
   }
 };
 
+// Update Quiz
 export const Update = async (req, res) => {
   try {
     const { subject, title, timeLimit, level, questions } = req.body;
     const updateData = { subject, title, timeLimit, level };
 
     if (questions) {
-      const parsedQuestions = typeof questions === "string" ? JSON.parse(questions) : questions;
+      const parsedQuestions =
+        typeof questions === "string" ? JSON.parse(questions) : questions;
       updateData.questions = parsedQuestions;
       updateData.totalQuestions = parsedQuestions.length;
     }
 
-    // Handle new image
     if (req.file) {
-      updateData.image = `/uploads/${req.file.filename}`;
+      updateData.image = req.file.path;
     }
 
-    const quiz = await Quiz.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    const quiz = await Quiz.findByIdAndUpdate(req.params.id, updateData, {
+      new: true,
+    });
+
     if (!quiz) return res.status(404).json({ message: "Quiz not found" });
 
     res.json({ message: "Quiz updated successfully", quiz });

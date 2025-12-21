@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const CreateQuiz = () => {
-
-  const URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   const [quizData, setQuizData] = useState({
     subject: "",
@@ -33,7 +32,7 @@ const CreateQuiz = () => {
     const questions = [...quizData.questions];
 
     if (name.startsWith("option")) {
-      const optionIndex = parseInt(name.split("-")[1]);
+      const optionIndex = Number(name.split("-")[1]);
       questions[index].options[optionIndex] = value;
     } else if (name === "correctOption") {
       questions[index].correctOption = Number(value);
@@ -55,7 +54,12 @@ const CreateQuiz = () => {
     setQuizData((prev) => {
       const updatedQuestions = [
         ...prev.questions,
-        { questionText: "", options: ["", "", "", ""], correctOption: 0, questionTime: 40 },
+        {
+          questionText: "",
+          options: ["", "", "", ""],
+          correctOption: 0,
+          questionTime: 40,
+        },
       ];
       return {
         ...prev,
@@ -93,19 +97,14 @@ const CreateQuiz = () => {
       formData.append("questions", JSON.stringify(quizData.questions));
       if (imageFile) formData.append("image", imageFile);
 
-      const res = await axios.post(
-        `${URL}/api/quiz/create`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      await axios.post(`${API_URL}/api/quiz/create`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
 
       alert("Quiz Created Successfully!");
-      console.log(res.data);
 
       setQuizData({
         subject: "",
@@ -114,7 +113,12 @@ const CreateQuiz = () => {
         level: "easy",
         totalQuestions: 1,
         questions: [
-          { questionText: "", options: ["", "", "", ""], correctOption: 0, questionTime: 40 },
+          {
+            questionText: "",
+            options: ["", "", "", ""],
+            correctOption: 0,
+            questionTime: 40,
+          },
         ],
       });
       setImageFile(null);
@@ -127,6 +131,7 @@ const CreateQuiz = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-5 bg-gray-50">
       <h1 className="text-3xl font-bold mb-5 text-indigo-600">Create Quiz</h1>
+
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-4xl bg-white p-6 rounded-xl shadow-lg space-y-6"
@@ -138,7 +143,7 @@ const CreateQuiz = () => {
             value={quizData.subject}
             onChange={handleQuizChange}
             placeholder="Subject"
-            className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
+            className="p-3 border rounded-lg"
             required
           />
           <input
@@ -147,7 +152,7 @@ const CreateQuiz = () => {
             value={quizData.title}
             onChange={handleQuizChange}
             placeholder="Quiz Title"
-            className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
+            className="p-3 border rounded-lg"
             required
           />
           <input
@@ -155,14 +160,13 @@ const CreateQuiz = () => {
             name="timeLimit"
             value={quizData.timeLimit}
             readOnly
-            placeholder="Total Time (seconds)"
-            className="p-3 border border-gray-300 rounded-lg bg-gray-100"
+            className="p-3 border rounded-lg bg-gray-100"
           />
           <select
             name="level"
             value={quizData.level}
             onChange={handleQuizChange}
-            className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
+            className="p-3 border rounded-lg"
           >
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
@@ -175,94 +179,85 @@ const CreateQuiz = () => {
             type="file"
             accept="image/*"
             onChange={(e) => setImageFile(e.target.files[0])}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
+            className="w-full p-3 border rounded-lg"
           />
           {imageFile && (
             <img
               src={URL.createObjectURL(imageFile)}
               alt="Quiz Preview"
-              className="mt-3 w-full h-48 object-cover rounded-lg shadow"
+              className="mt-3 w-full h-48 object-cover rounded-lg"
             />
           )}
         </div>
 
-        <div className="space-y-4">
-          {quizData.questions.map((q, index) => (
-            <div
-              key={index}
-              className="bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 p-5 rounded-xl shadow-md relative transition transform hover:scale-105"
-            >
-              <h2 className="text-xl font-semibold mb-3">Question {index + 1}</h2>
-              <textarea
-                name="questionText"
-                value={q.questionText}
+        {quizData.questions.map((q, index) => (
+          <div key={index} className="p-4 bg-gray-100 rounded-lg">
+            <textarea
+              name="questionText"
+              value={q.questionText}
+              onChange={(e) => handleQuestionChange(index, e)}
+              placeholder="Question Text"
+              className="w-full p-2 border rounded mb-3"
+              required
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {q.options.map((opt, i) => (
+                <input
+                  key={i}
+                  type="text"
+                  name={`option-${i}`}
+                  value={opt}
+                  onChange={(e) => handleQuestionChange(index, e)}
+                  placeholder={`Option ${i + 1}`}
+                  className="p-2 border rounded"
+                  required
+                />
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+              <input
+                type="number"
+                name="correctOption"
+                value={q.correctOption}
                 onChange={(e) => handleQuestionChange(index, e)}
-                placeholder="Question Text"
-                className="w-full p-3 border border-gray-300 rounded-lg mb-3 focus:ring-2 focus:ring-indigo-400"
+                className="p-2 border rounded"
                 required
               />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-                {q.options.map((option, optIndex) => (
-                  <input
-                    key={optIndex}
-                    type="text"
-                    name={`option-${optIndex}`}
-                    value={option}
-                    onChange={(e) => handleQuestionChange(index, e)}
-                    placeholder={`Option ${optIndex + 1}`}
-                    className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
-                    required
-                  />
-                ))}
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-                <input
-                  type="number"
-                  min={0}
-                  max={q.options.length - 1}
-                  name="correctOption"
-                  value={q.correctOption}
-                  onChange={(e) => handleQuestionChange(index, e)}
-                  placeholder="Correct Option Index (0-3)"
-                  className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 w-full"
-                  required
-                />
-                <input
-                  type="number"
-                  min={5}
-                  max={600}
-                  name="questionTime"
-                  value={q.questionTime}
-                  onChange={(e) => handleQuestionChange(index, e)}
-                  placeholder="Time per Question (seconds)"
-                  className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 w-full"
-                  required
-                />
-              </div>
-              {quizData.questions.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeQuestion(index)}
-                  className="absolute top-3 right-3 text-red-500 font-bold hover:text-red-700"
-                >
-                  ✕
-                </button>
-              )}
+              <input
+                type="number"
+                name="questionTime"
+                value={q.questionTime}
+                onChange={(e) => handleQuestionChange(index, e)}
+                className="p-2 border rounded"
+                required
+              />
             </div>
-          ))}
 
-          <button
-            type="button"
-            onClick={addQuestion}
-            className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition"
-          >
-            Add Question
-          </button>
-        </div>
+            {quizData.questions.length > 1 && (
+              <button
+                type="button"
+                onClick={() => removeQuestion(index)}
+                className="mt-2 text-red-500"
+              >
+                Remove
+              </button>
+            )}
+          </div>
+        ))}
+
+        <button
+          type="button"
+          onClick={addQuestion}
+          className="px-4 py-2 bg-indigo-500 text-white rounded"
+        >
+          Add Question
+        </button>
 
         <button
           type="submit"
-          className="w-full py-3 bg-green-500 text-white font-bold rounded-lg hover:bg-green-600 transition"
+          className="w-full py-3 bg-green-500 text-white rounded-lg"
         >
           Create Quiz
         </button>
