@@ -3,14 +3,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const QuizCard = ({ quiz, index }) => {
-
-  const URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-
-
   const imageUrl = quiz.image
-    ? quiz.image.startsWith("http")
-      ? quiz.image
-      : `${URL}${quiz.image}`
+    ? quiz.image
     : "https://via.placeholder.com/400x200?text=Quiz+Image";
 
   return (
@@ -32,9 +26,14 @@ const QuizCard = ({ quiz, index }) => {
         <h5 className="text-lg font-bold mb-1 truncate" title={quiz.title}>
           {quiz.title}
         </h5>
-        <p className="text-sm mb-1 truncate" title={`${quiz.questions?.length} Question(s)`}>
+
+        <p
+          className="text-sm mb-1 truncate"
+          title={`${quiz.questions?.length} Question(s)`}
+        >
           {quiz.questions?.length} Question(s)
         </p>
+
         <p className="text-sm mb-3 truncate" title={`Level: ${quiz.level}`}>
           Level: {quiz.level}
         </p>

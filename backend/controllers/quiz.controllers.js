@@ -35,11 +35,13 @@ export const Create = async (req, res) => {
 export const Update = async (req, res) => {
   try {
     const { subject, title, timeLimit, level, questions } = req.body;
+
     const updateData = { subject, title, timeLimit, level };
 
-    if (questions) {
+    if (questions && questions.length > 0) {
       const parsedQuestions =
         typeof questions === "string" ? JSON.parse(questions) : questions;
+
       updateData.questions = parsedQuestions;
       updateData.totalQuestions = parsedQuestions.length;
     }
@@ -52,7 +54,9 @@ export const Update = async (req, res) => {
       new: true,
     });
 
-    if (!quiz) return res.status(404).json({ message: "Quiz not found" });
+    if (!quiz) {
+      return res.status(404).json({ message: "Quiz not found" });
+    }
 
     res.json({ message: "Quiz updated successfully", quiz });
   } catch (err) {
@@ -60,6 +64,7 @@ export const Update = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // Delete Quiz
 export const Delete = async (req, res) => {
@@ -92,7 +97,7 @@ export const DisplayByIdForUser = async (req, res) => {
       _id: q._id,
       questionText: q.questionText,
       options: q.options,
-      questionTime: q.questionTime || 30, 
+      questionTime: q.questionTime || 30,
     }));
 
     res.json(quiz);

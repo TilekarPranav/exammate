@@ -54,7 +54,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/uploads", express.static("uploads"));
 app.use("/api/auth", authRouter);
 app.use("/api/quiz", quizRouter);
 app.use("/api/admin", adminRouter);

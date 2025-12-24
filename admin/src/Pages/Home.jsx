@@ -5,7 +5,6 @@ import axios from "axios";
 import { Edit, Trash2, Copy } from "lucide-react";
 
 export default function Home() {
-
   const URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   const [quizzes, setQuizzes] = useState([]);
@@ -57,6 +56,7 @@ export default function Home() {
         >
           No Quizzes Found
         </motion.h1>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-4xl">
           {actions.map((action, idx) => (
             <motion.div
@@ -67,8 +67,12 @@ export default function Home() {
               className={`${action.color} rounded-lg shadow-md p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:scale-105 hover:shadow-xl transition transform duration-300`}
               onClick={() => navigate(action.page)}
             >
-              <h2 className="text-xl font-semibold text-white mb-1">{action.title}</h2>
-              <p className="text-white text-sm">Go to {action.title} page</p>
+              <h2 className="text-xl font-semibold text-white mb-1">
+                {action.title}
+              </h2>
+              <p className="text-white text-sm">
+                Go to {action.title} page
+              </p>
             </motion.div>
           ))}
         </div>
@@ -90,7 +94,7 @@ export default function Home() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {quizzes.map((quiz, idx) => {
           const imageUrl = quiz.image
-            ? `${URL}${quiz.image}`
+            ? quiz.image
             : "https://via.placeholder.com/400x200?text=Quiz+Image";
 
           return (
@@ -115,8 +119,12 @@ export default function Home() {
                 </h2>
 
                 <div className="flex justify-between items-center text-xs mb-1">
-                  <span className="text-gray-300 truncate">{quiz.subject}</span>
-                  <span className="text-gray-400">{quiz.level} | {quiz.timeLimit}s</span>
+                  <span className="text-gray-300 truncate">
+                    {quiz.subject}
+                  </span>
+                  <span className="text-gray-400">
+                    {quiz.level} | {quiz.timeLimit}s
+                  </span>
                 </div>
 
                 <p className="text-gray-300 text-xs text-center break-all truncate mb-2">
