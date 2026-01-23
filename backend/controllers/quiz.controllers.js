@@ -1,12 +1,14 @@
 import Quiz from "../models/quiz.model.js";
 import QuizResult from "../models/result.model.js";
 
+import Quiz from "../models/quiz.model.js";
+
 export const Create = async (req, res) => {
   try {
     const { subject, title, timeLimit, level, questions } = req.body;
 
     if (!questions) {
-      return res.status(400).json({ error: "Questions are required" });
+      return res.status(400).json({ message: "Questions are required" });
     }
 
     const parsedQuestions =
@@ -19,7 +21,7 @@ export const Create = async (req, res) => {
       level,
       totalQuestions: parsedQuestions.length,
       questions: parsedQuestions,
-      image: req.file?.secure_url, 
+      image: req.file?.secure_url,
     });
 
     await quiz.save();
@@ -31,7 +33,10 @@ export const Create = async (req, res) => {
     });
   } catch (err) {
     console.error("Create Quiz Error:", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
@@ -40,7 +45,12 @@ export const Update = async (req, res) => {
   try {
     const { subject, title, timeLimit, level, questions } = req.body;
 
-    const updateData = { subject, title, timeLimit, level };
+    const updateData = {
+      subject,
+      title,
+      timeLimit,
+      level,
+    };
 
     if (questions) {
       const parsedQuestions =
@@ -50,8 +60,9 @@ export const Update = async (req, res) => {
       updateData.totalQuestions = parsedQuestions.length;
     }
 
-    if (req.file) {
-      updateData.image = req.file.secure_url; 
+    // ✅ SAFE IMAGE UPDATE
+    if (req.file && req.file.secure_url) {
+      updateData.image = req.file.secure_url;
     }
 
     const quiz = await Quiz.findByIdAndUpdate(
@@ -71,7 +82,10 @@ export const Update = async (req, res) => {
     });
   } catch (err) {
     console.error("Update Quiz Error:", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 

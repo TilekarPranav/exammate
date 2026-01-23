@@ -23,7 +23,7 @@ router.get("/display/:id", DisplayByIdForUser);
 
 // Protected routes
 router.post("/create", verifyToken, upload.single("image"), Create);
-router.put("/update/:id", verifyToken, validateObjectId("id"), upload.single("image"), Update);
+router.put("/update/:id", verifyToken, upload.single("image"), Update);
 router.delete("/delete/:id", verifyToken, validateObjectId("id"), Delete);
 router.get("/all", verifyToken, getAllQuizzes);
 router.get("/:id", verifyToken, validateObjectId("id"), getQuizById);
