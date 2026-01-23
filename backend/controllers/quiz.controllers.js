@@ -1,8 +1,6 @@
 import Quiz from "../models/quiz.model.js";
 import QuizResult from "../models/result.model.js";
 
-import Quiz from "../models/quiz.model.js";
-
 export const Create = async (req, res) => {
   try {
     const { subject, title, timeLimit, level, questions } = req.body;
