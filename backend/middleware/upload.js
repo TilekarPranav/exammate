@@ -4,11 +4,11 @@ import cloudinary from "./cloudinary.js";
 
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: {
+  params: async () => ({
     folder: "quiz-images",
     allowed_formats: ["jpg", "jpeg", "png", "webp"],
     transformation: [{ width: 800, height: 800, crop: "limit" }],
-  },
+  }),
 });
 
 const upload = multer({

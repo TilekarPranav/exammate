@@ -1,7 +1,6 @@
 import Quiz from "../models/quiz.model.js";
 import QuizResult from "../models/result.model.js";
 
-// Create Quiz
 export const Create = async (req, res) => {
   try {
     const { subject, title, timeLimit, level, questions } = req.body;
@@ -20,25 +19,30 @@ export const Create = async (req, res) => {
       level,
       totalQuestions: parsedQuestions.length,
       questions: parsedQuestions,
-      image: req.file ? req.file.path : undefined,
+      image: req.file?.secure_url, 
     });
 
     await quiz.save();
-    res.status(201).json({ message: "Quiz created successfully", quiz });
+
+    res.status(201).json({
+      success: true,
+      message: "Quiz created successfully",
+      quiz,
+    });
   } catch (err) {
     console.error("Create Quiz Error:", err);
     res.status(500).json({ error: err.message });
   }
 };
 
-// Update Quiz
+
 export const Update = async (req, res) => {
   try {
     const { subject, title, timeLimit, level, questions } = req.body;
 
     const updateData = { subject, title, timeLimit, level };
 
-    if (questions && questions.length > 0) {
+    if (questions) {
       const parsedQuestions =
         typeof questions === "string" ? JSON.parse(questions) : questions;
 
@@ -47,18 +51,24 @@ export const Update = async (req, res) => {
     }
 
     if (req.file) {
-      updateData.image = req.file.path;
+      updateData.image = req.file.secure_url; 
     }
 
-    const quiz = await Quiz.findByIdAndUpdate(req.params.id, updateData, {
-      new: true,
-    });
+    const quiz = await Quiz.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    );
 
     if (!quiz) {
       return res.status(404).json({ message: "Quiz not found" });
     }
 
-    res.json({ message: "Quiz updated successfully", quiz });
+    res.json({
+      success: true,
+      message: "Quiz updated successfully",
+      quiz,
+    });
   } catch (err) {
     console.error("Update Quiz Error:", err);
     res.status(500).json({ error: err.message });
