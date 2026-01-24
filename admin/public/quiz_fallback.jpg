@@ -1,0 +1,26 @@
+import { useState } from "react";
+
+const CLOUDINARY_BASE =
+  "https://res.cloudinary.com/dldbkluhj/image/upload";
+
+export default function QuizImage({ image }) {
+  const [imgSrc, setImgSrc] = useState(
+    image ? `${CLOUDINARY_BASE}/${image}` : "/quiz_fallback.jpg"
+  );
+
+  const handleError = () => {
+    // stop infinite loop
+    if (!imgSrc.includes("quiz_fallback.jpg")) {
+      setImgSrc("/quiz_fallback.jpg"); // local fallback
+    }
+  };
+
+  return (
+    <img
+      src={imgSrc}
+      alt="quiz"
+      onError={handleError}
+      loading="lazy"
+    />
+  );
+}

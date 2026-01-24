@@ -6,9 +6,7 @@ import { Edit, Trash2, Copy } from "lucide-react";
 
 export default function Home() {
   const URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-
-  const FALLBACK_IMAGE =
-    "https://res.cloudinary.com/dldbkluhj/image/upload/v1/quiz_fallback.jpg";
+  const FALLBACK_IMAGE = "../../public/quiz_fallback.jpg";
 
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -74,7 +72,9 @@ export default function Home() {
                   alt={quiz.title}
                   className="h-full w-full object-cover"
                   onError={(e) => {
-                    e.currentTarget.src = FALLBACK_IMAGE;
+                    if (e.currentTarget.src !== window.location.origin + FALLBACK_IMAGE) {
+                      e.currentTarget.src = FALLBACK_IMAGE;
+                    }
                   }}
                 />
               </div>
@@ -93,7 +93,7 @@ export default function Home() {
                   </span>
                 </div>
 
-                <p className="text-gray-300 text-xs text-center truncate mb-2">
+                <p className="text-gray-300 text-xs text-center break-all truncate mb-2">
                   <span className="font-semibold">ID:</span> {quiz._id}
                 </p>
 
@@ -103,7 +103,7 @@ export default function Home() {
                       e.stopPropagation();
                       copyToClipboard(quiz._id);
                     }}
-                    className="flex items-center gap-1 text-xs px-2 py-1 bg-indigo-500 text-white rounded hover:bg-indigo-600"
+                    className="flex items-center gap-1 text-xs px-2 py-1 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition"
                   >
                     <Copy size={12} /> Copy
                   </button>
@@ -113,7 +113,7 @@ export default function Home() {
                       e.stopPropagation();
                       navigate(`/update-quiz`);
                     }}
-                    className="flex items-center gap-1 text-xs px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                    className="flex items-center gap-1 text-xs px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition"
                   >
                     <Edit size={12} /> Update
                   </button>
@@ -123,7 +123,7 @@ export default function Home() {
                       e.stopPropagation();
                       navigate(`/delete-quiz`);
                     }}
-                    className="flex items-center gap-1 text-xs px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                    className="flex items-center gap-1 text-xs px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
                   >
                     <Trash2 size={12} /> Delete
                   </button>
