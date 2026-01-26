@@ -20,7 +20,7 @@ const quizSchema = new mongoose.Schema(
     totalQuestions: { type: Number, required: true },
     image: {
       type: String,
-      default: "https://via.placeholder.com/400x200?text=Quiz+Image",
+      default: "",
     },
     questions: [questionSchema],
   },

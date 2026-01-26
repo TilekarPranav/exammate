@@ -1,9 +1,11 @@
 import Quiz from "../models/quiz.model.js";
 import QuizResult from "../models/result.model.js";
+import cloud from "../middleware/cloudinary.js";
+
 
 export const Create = async (req, res) => {
   try {
-    const { subject, title, timeLimit, level, questions } = req.body;
+    const { subject, title, timeLimit, level, questions, image } = req.body;
 
     if (!questions) {
       return res.status(400).json({ message: "Questions are required" });
@@ -12,6 +14,15 @@ export const Create = async (req, res) => {
     const parsedQuestions =
       typeof questions === "string" ? JSON.parse(questions) : questions;
 
+    let imageUrl = null;
+
+    if (image) {
+      const upload = await cloud.uploader.upload(image, {
+        folder: "quizzes",
+      });
+      imageUrl = upload.secure_url;
+    }
+
     const quiz = new Quiz({
       subject,
       title,
@@ -19,7 +30,7 @@ export const Create = async (req, res) => {
       level,
       totalQuestions: parsedQuestions.length,
       questions: parsedQuestions,
-      image: req.file?.secure_url,
+      image: imageUrl,
     });
 
     await quiz.save();
@@ -38,10 +49,9 @@ export const Create = async (req, res) => {
   }
 };
 
-
 export const Update = async (req, res) => {
   try {
-    const { subject, title, timeLimit, level, questions } = req.body;
+    const { subject, title, timeLimit, level, questions, image } = req.body;
 
     const updateData = {
       subject,
@@ -58,9 +68,11 @@ export const Update = async (req, res) => {
       updateData.totalQuestions = parsedQuestions.length;
     }
 
-    // ✅ SAFE IMAGE UPDATE
-    if (req.file && req.file.secure_url) {
-      updateData.image = req.file.secure_url;
+    if (image) {
+      const upload = await cloud.uploader.upload(image, {
+        folder: "quizzes",
+      });
+      updateData.image = upload.secure_url;
     }
 
     const quiz = await Quiz.findByIdAndUpdate(
@@ -88,7 +100,6 @@ export const Update = async (req, res) => {
 };
 
 
-// Delete Quiz
 export const Delete = async (req, res) => {
   try {
     const quiz = await Quiz.findByIdAndDelete(req.params.id);
@@ -135,14 +146,12 @@ export const SubmitQuiz = async (req, res) => {
     const { answers, timeSpent } = req.body;
     const quizId = req.params.id;
 
-    // Validate answers array
     if (!Array.isArray(answers)) {
       return res
         .status(400)
         .json({ success: false, message: "Answers array is required" });
     }
 
-    // Fetch quiz
     const quiz = await Quiz.findById(quizId).lean();
     if (!quiz) {
       return res
@@ -150,7 +159,6 @@ export const SubmitQuiz = async (req, res) => {
         .json({ success: false, message: "Quiz not found" });
     }
 
-    // Ensure answers length matches questions length
     if (answers.length !== quiz.questions.length) {
       return res.status(400).json({
         success: false,
@@ -158,7 +166,6 @@ export const SubmitQuiz = async (req, res) => {
       });
     }
 
-    // Calculate results
     let correctCount = 0;
     quiz.questions.forEach((q, idx) => {
       if (answers[idx] === q.correctOption) correctCount++;
@@ -168,7 +175,6 @@ export const SubmitQuiz = async (req, res) => {
     const wrongCount = total - correctCount;
     const percentage = Math.round((correctCount / total) * 100);
 
-    // Save result
     const result = await QuizResult.create({
       user: req.userId,
       quiz: quiz._id,
@@ -225,7 +231,7 @@ export const getQuizById = async (req, res) => {
 
 export const getAllQuizzes = async (req, res) => {
   try {
-    const quizzes = await Quiz.find().lean(); // Fetch all quizzes
+    const quizzes = await Quiz.find().lean(); 
     res.json({ quizzes });
   } catch (err) {
     console.error(err);
