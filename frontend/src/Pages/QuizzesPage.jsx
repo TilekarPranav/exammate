@@ -27,7 +27,7 @@ const QuizzesPage = () => {
   }, []);
 
 
-  if (loading) return <div><LoadingSpinner /></div>;
+  if (loading) return <div className="mt-5"><LoadingSpinner /></div>;
 
   return (
     <div className="max-w-6xl mx-auto mt-10 px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
