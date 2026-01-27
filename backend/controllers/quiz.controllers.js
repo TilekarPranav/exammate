@@ -5,7 +5,13 @@ import cloud from "../middleware/cloudinary.js";
 
 export const Create = async (req, res) => {
   try {
-    const { subject, title, timeLimit, level, questions } = req.body;
+    const {
+      subject,
+      title,
+      timeLimit,
+      level,
+      questions,
+    } = req.body || {};
 
     if (!questions) {
       return res.status(400).json({ message: "Questions are required" });
@@ -14,10 +20,10 @@ export const Create = async (req, res) => {
     const parsedQuestions =
       typeof questions === "string" ? JSON.parse(questions) : questions;
 
-    let imageUrl = null;
+    let imageUrl = "";
 
-    if (image) {
-      const upload = await cloud.uploader.upload(image, {
+    if (req.file) {
+      const upload = await cloud.uploader.upload(req.file.path, {
         folder: "quizzes",
       });
       imageUrl = upload.secure_url;
@@ -37,28 +43,30 @@ export const Create = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "Quiz created successfully",
       quiz,
     });
   } catch (err) {
     console.error("Create Quiz Error:", err);
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    res.status(500).json({ message: err.message });
   }
 };
 
 export const Update = async (req, res) => {
   try {
-    const { subject, title, timeLimit, level, questions } = req.body;
-
-    const updateData = {
+    const {
       subject,
       title,
       timeLimit,
       level,
-    };
+      questions,
+    } = req.body || {};
+
+    const updateData = {};
+
+    if (subject !== undefined) updateData.subject = subject;
+    if (title !== undefined) updateData.title = title;
+    if (timeLimit !== undefined) updateData.timeLimit = timeLimit;
+    if (level !== undefined) updateData.level = level;
 
     if (questions) {
       const parsedQuestions =
@@ -68,8 +76,8 @@ export const Update = async (req, res) => {
       updateData.totalQuestions = parsedQuestions.length;
     }
 
-    if (image) {
-      const upload = await cloud.uploader.upload(image, {
+    if (req.file) {
+      const upload = await cloud.uploader.upload(req.file.path, {
         folder: "quizzes",
       });
       updateData.image = upload.secure_url;
@@ -87,15 +95,11 @@ export const Update = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Quiz updated successfully",
       quiz,
     });
   } catch (err) {
     console.error("Update Quiz Error:", err);
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    res.status(500).json({ message: err.message });
   }
 };
 
