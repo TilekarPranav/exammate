@@ -5,7 +5,7 @@ import cloud from "../middleware/cloudinary.js";
 
 export const Create = async (req, res) => {
   try {
-    const { subject, title, timeLimit, level, questions, image } = req.body;
+    const { subject, title, timeLimit, level, questions } = req.body;
 
     if (!questions) {
       return res.status(400).json({ message: "Questions are required" });
@@ -51,7 +51,7 @@ export const Create = async (req, res) => {
 
 export const Update = async (req, res) => {
   try {
-    const { subject, title, timeLimit, level, questions, image } = req.body;
+    const { subject, title, timeLimit, level, questions } = req.body;
 
     const updateData = {
       subject,
