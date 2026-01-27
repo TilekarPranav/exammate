@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import QuizCard from "./QuizCard";
+import LoadingSpinner from "../Components/LoadingSpinner";
 
 const QuizzesPage = () => {
 
@@ -26,7 +27,7 @@ const QuizzesPage = () => {
   }, []);
 
 
-  if (loading) return <p className="text-center mt-10">Loading quizzes...</p>;
+  if (loading) return <div><LoadingSpinner /></div>;
 
   return (
     <div className="max-w-6xl mx-auto mt-10 px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
